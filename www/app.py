@@ -8,6 +8,7 @@ from jinja2 import Environment, FileSystemLoader
 
 import orm
 from webcoro import add_routes, add_static
+from config import configs
 
 
 def init_jinja2(app, **kw):
@@ -107,10 +108,13 @@ def datetime_filter(t):
 
 
 async def init(loop):
-    await orm.create_pool(loop=loop, host='127.0.0.1', port=3306, user='root', password='password01!', db='demo_webapp')
-    app = web.Application(loop=loop, middlewares=[
-        logger_factory, response_factory
-    ])
+    await orm.create_pool(loop=loop,
+                          host=configs.db.host,
+                          port=configs.db.port,
+                          user=configs.db.user,
+                          password=configs.db.password,
+                          db=configs.db.db)
+    app = web.Application(loop=loop, middlewares=[logger_factory, response_factory])
     init_jinja2(app, filters=dict(datetime=datetime_filter))
     add_routes(app, 'handlers')
     add_static(app)
