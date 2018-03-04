@@ -34,7 +34,7 @@ def init_jinja2(app, **kw):
     app['__templating__'] = env
 
 
-async  def auth_factory(app, handler):
+async def auth_factory(app, handler):
     async def auth(request):
         logging.info('check user: %s %s' % (request.method, request.path))
         request.__user__ = None

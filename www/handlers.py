@@ -84,15 +84,18 @@ async def index(request):
         Blog(id='2', name='Something New', summary=summary, created_at=time.time()-3600),
         Blog(id='3', name='Learn Swift', summary=summary, created_at=time.time()-7200)
     ]
-    user = None
     cookie_str = request.cookies.get(COOKIE_NAME)
-    if 'deleted' not in cookie_str:
-        user = await cookie2user(cookie_str)
+    user = ''
+    if cookie_str:
+        if'deleted' in cookie_str:
+            user = ''
+        else:
+            user = await cookie2user(cookie_str)
     return {
         '__template__': 'blogs.html',
         'blogs': blogs,
-        'user': user
-    }
+        # 'page': page,
+        '__user__': user}
 
 
 @get('/register')
